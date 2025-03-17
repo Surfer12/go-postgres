@@ -1,6 +1,15 @@
-FROM python:3.9-slim-buster
+FROM golang:1.17-alpine
+
 WORKDIR /app
-COPY . /app
-RUN pip install --no-cache-dir -r requirements.txt
+
+COPY go.mod ./
+COPY go.sum ./
+RUN go mod download
+
+COPY *.go ./
+
+RUN go build -o /vertex-api
+
 EXPOSE 8080
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "vertex_api:app"] 
+
+CMD ["/vertex-api"] 

@@ -10,4 +10,4 @@ gcloud run deploy vertex-api \
   --platform managed \
   --region $REGION \
   --service-account vertex-ai-service-account@$PROJECT_ID.iam.gserviceaccount.com \
-  --set-env-vars PROJECT_ID=$PROJECT_ID,REGION=$REGION,ENDPOINT_ID=$ENDPOINT_ID 
+  --set-env-vars PROJECT_ID=$PROJECT_ID,REGION=$REGION,ENDPOINT_ID=$ENDPOINT_ID,GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json 
