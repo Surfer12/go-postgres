@@ -1,63 +1,27 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"my-go-postgres-project/db"
-	"my-go-postgres-project/models"
+	"net/http"
+
+	"github.com/yourusername/yourprojectname/api" // Import the api package
+	"github.com/yourusername/yourprojectname/db"  // Replace with your actual module path
+	// "github.com/yourusername/yourprojectname/models" // No longer directly used here
 )
 
 func main() {
-	// Initialize the database connection
 	dbConn, err := db.InitDB()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Failed to connect to database:", err)
 	}
 	defer dbConn.Close()
 
-	// Example usage: Create a user
-	newUser := models.User{
-		Username: "testuser",
-		Email:    "test@example.com",
-	}
+	// Set up HTTP handlers
+	http.HandleFunc("/users", api.CreateUserHandler)        // POST /users
+	http.HandleFunc("/users/", api.GetUserHandler)          // GET /users/{id}
+	http.HandleFunc("/users/update", api.UpdateUserHandler) // PUT /users/update?id={id}
+	http.HandleFunc("/users/delete", api.DeleteUserHandler) // DELETE /users/delete?id={id}
 
-	createdUser, err := db.CreateUser(dbConn, newUser)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Created user: %+v\n", createdUser)
-
-	// Example usage: Get a user by ID
-	retrievedUser, err := db.GetUserByID(dbConn, createdUser.ID)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Retrieved user: %+v\n", retrievedUser)
-
-	// Example usage: Update a user
-	updatedUser := models.User{
-		ID:       retrievedUser.ID,
-		Username: "updateduser",
-		Email:    "updated@example.com",
-	}
-
-	rowsAffected, err := db.UpdateUser(dbConn, updatedUser)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Rows affected by update: %d\n", rowsAffected)
-
-	// Example usage: Get all users.
-	allUsers, err := db.GetAllUsers(dbConn)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("All users: %+v\n", allUsers)
-
-	// Example usage: Delete a user
-	err = db.DeleteUser(dbConn, createdUser.ID)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("User deleted successfully")
+	log.Println("Server listening on port 8080")
+	log.Fatal(http.ListenAndServe(":8080", nil)) // Start the server
 }
