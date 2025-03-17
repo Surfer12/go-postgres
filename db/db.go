@@ -129,3 +129,35 @@ func DeleteUser(db *sql.DB, id int) error {
 	}
 	return nil
 }
+
+func ConnectDB() (*sql.DB, error) {
+	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		return nil, err
+	}
+
+	// Test the connection
+	err = db.Ping()
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("Successfully connected to the database!")
+
+	// Create the users table if it doesn't exist
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS users (
+			id SERIAL PRIMARY KEY,
+			username VARCHAR(255) UNIQUE NOT NULL,
+			email VARCHAR(255) UNIQUE NOT NULL
+		)
+	`)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create users table: %w", err)
+	}
+
+	return db, nil
+}

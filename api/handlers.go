@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/yourusername/yourprojectname/db" // Replace with your actual module path
-	"github.com/yourusername/yourprojectname/models"
+	"github.com/yourusername/yourprojectname/db"     // Ensure this path is correct
+	"github.com/yourusername/yourprojectname/models" // Ensure this path is correct
 )
 
 func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -15,6 +15,9 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
+	// Add HSTS header for HTTPS
+	w.Header().Set("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
 
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -109,4 +112,9 @@ func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent) // 204 No Content for successful deletion
+}
+
+func HandleRequest(w http.ResponseWriter, r *http.Request) {
+	// ... existing code ...
+	// ... existing code ...
 }

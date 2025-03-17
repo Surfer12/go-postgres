@@ -22,6 +22,7 @@ func main() {
 	http.HandleFunc("/users/update", api.UpdateUserHandler) // PUT /users/update?id={id}
 	http.HandleFunc("/users/delete", api.DeleteUserHandler) // DELETE /users/delete?id={id}
 
-	log.Println("Server listening on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil)) // Start the server
+	// Use ListenAndServeTLS for HTTPS
+	log.Println("Server listening on port 8080 with HTTPS")
+	log.Fatal(http.ListenAndServeTLS(":8080", "server.crt", "server.key", nil))
 }
