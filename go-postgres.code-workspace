@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "rcct-visualization",
+			"path": "../../home/vscode/rcct-visualization"
+		}
+	],
+	"settings": {}
+}
